@@ -9,7 +9,7 @@ router.get('/', BookCtrl.getAllBook);
 
 router.post('/', auth, multer, BookCtrl.createBook);
 
-router.get('/:id', auth, BookCtrl.getOneBook);
+router.get('/:id', BookCtrl.getOneBook);
 
 router.put('/:id', auth, multer, BookCtrl.modifyBook);
 

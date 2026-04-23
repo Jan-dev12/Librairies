@@ -51,7 +51,7 @@ function Book() {
     if (e.key && e.key !== 'Enter') {
       return;
     }
-    // eslint-disable-next-line no-restricted-globals
+    // eslint-disable-next-line
     const check = confirm('Etes vous sûr de vouloir supprimer ce livre ?');
     if (check) {
       const del = await deleteBook(book.id);
@@ -80,14 +80,16 @@ function Book() {
             </div>
           ) : null}
           <BookInfo book={book} />
-          <BookRatingForm
-            userRated={userRated}
-            userId={connectedUser?.userId}
-            rating={rating}
-            setRating={setRating}
-            setBook={setBook}
-            id={book.id}
-          />
+          {connectedUser && (
+            <BookRatingForm
+              userRated={userRated}
+              userId={connectedUser?.userId}
+              rating={rating}
+              setRating={setRating}
+              setBook={setBook}
+              id={book.id}
+            />
+          )}
         </div>
       </div>
       <hr />

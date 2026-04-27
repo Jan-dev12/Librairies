@@ -6,7 +6,7 @@ const path = require('path');
 const bookRoutes = require('./routes/book')
 const userRoutes = require('./routes/user')
 
-//connextion a la base de donnée MongoDB
+//connexion a la base de donnée MongoDB
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('Connexion à MongoDB réussie !'))
 .catch(() => console.log('Connexion à MongoDB échouée !'));

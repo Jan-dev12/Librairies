@@ -12,6 +12,8 @@ const normalizePort = val => {
   }
   return false;
 };
+
+//permet de savoir sur quel port le serveur va écouter
 const port = normalizePort(process.env.PORT ||'4000');
 app.set('port', port);
 

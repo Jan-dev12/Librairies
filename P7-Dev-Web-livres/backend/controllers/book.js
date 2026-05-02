@@ -3,7 +3,22 @@ const fs = require('fs');
 const path = require('path');
 
 exports.createBook = (req, res, next) => {
-   const bookObject = JSON.parse(req.body.book);
+    let bookObject;
+
+  try {
+    bookObject = JSON.parse(req.body.book);
+  } catch (err) {
+    return res.status(400).json({ error: "Format JSON invalide" });
+  }
+
+  if (!bookObject.title || !bookObject.author || !bookObject.genre || !bookObject.year) {
+    return res.status(400).json({ error: "Champs manquants" });
+  }
+
+  if (isNaN(bookObject.year)) {
+    return res.status(400).json({ error: "L'année doit être un nombre" });
+  }
+
    delete bookObject._id;
    delete bookObject._userId;
    const book = new Book({
@@ -18,12 +33,28 @@ exports.createBook = (req, res, next) => {
 };
 
 exports.modifyBook = (req, res, next) => {
-  const bookObject = req.file ? {
-       ...JSON.parse(req.body.book),
-       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-   } : { ...req.body };
+  let bookObject;
+
+  if (req.file) {
+    try {
+      bookObject = JSON.parse(req.body.book);
+    } catch (err) {
+      return res.status(400).json({ error: "Format JSON invalide" });
+    }
+  } else {
+    bookObject = { ...req.body };
+  }
+
+  if (bookObject.year && isNaN(bookObject.year)) {
+    return res.status(400).json({ error: "L'année doit être un nombre" });
+  }
  
    delete bookObject._userId;
+
+   if (req.file) {
+    bookObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+  }
+
    Book.findOne({_id: req.params.id})
        .then((book) => {
            if (book.userId !== req.auth.userId) {

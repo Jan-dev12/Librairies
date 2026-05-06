@@ -3,21 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 exports.createBook = (req, res, next) => {
-    let bookObject;
-
-  try {
-    bookObject = JSON.parse(req.body.book);
-  } catch (err) {
-    return res.status(400).json({ error: "Format JSON invalide" });
-  }
-
-  if (!bookObject.title || !bookObject.author || !bookObject.genre || !bookObject.year) {
-    return res.status(400).json({ error: "Champs manquants" });
-  }
-
-  if (isNaN(bookObject.year)) {
-    return res.status(400).json({ error: "L'année doit être un nombre" });
-  }
+   const bookObject = JSON.parse(req.body.book);
 
    delete bookObject._id;
    delete bookObject._userId;
@@ -28,8 +14,6 @@ exports.createBook = (req, res, next) => {
       year: bookObject.year,
       userId: req.auth.userId,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-      ratings: [],    
-      averageRating: 0
    });
  
    book.save()

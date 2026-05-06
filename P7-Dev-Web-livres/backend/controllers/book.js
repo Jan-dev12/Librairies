@@ -22,9 +22,14 @@ exports.createBook = (req, res, next) => {
    delete bookObject._id;
    delete bookObject._userId;
    const book = new Book({
-       ...bookObject,
-       userId: req.auth.userId,
-       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      title: bookObject.title,
+      author: bookObject.author,
+      genre: bookObject.genre,
+      year: bookObject.year,
+      userId: req.auth.userId,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+      ratings: [],    
+      averageRating: 0
    });
  
    book.save()
@@ -51,8 +56,15 @@ exports.modifyBook = (req, res, next) => {
  
    delete bookObject._userId;
 
+   const updatedsecurity = {
+    title: bookObject.title,
+    author: bookObject.author,
+    genre: bookObject.genre,
+    year: bookObject.year
+  };
+
    if (req.file) {
-    bookObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    updatedsecurity.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
   }
 
    Book.findOne({_id: req.params.id})
@@ -60,7 +72,7 @@ exports.modifyBook = (req, res, next) => {
            if (book.userId !== req.auth.userId) {
                return res.status(401).json({ message : 'Not authorized'});
            } else {
-               Book.updateOne({ _id: req.params.id}, { ...bookObject, _id: req.params.id})
+               Book.updateOne({ _id: req.params.id}, { ...updatedsecurity, _id: req.params.id})
                .then(() => res.status(200).json({message : 'Objet modifié!'}))
                .catch(error => res.status(401).json({ error }));
            }

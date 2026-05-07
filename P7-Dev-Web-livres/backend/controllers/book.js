@@ -15,7 +15,10 @@ exports.createBook = (req, res, next) => {
       year: bookObject.year,
       userId: req.auth.userId,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-      ratings: bookObject.ratings,
+      ratings: [{
+        userId: req.auth.userId,
+        grade: bookObject.ratings[0].grade
+      }],
       averageRating: bookObject.averageRating
    });
  

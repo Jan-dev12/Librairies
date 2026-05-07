@@ -19,7 +19,7 @@ exports.createBook = (req, res, next) => {
         userId: req.auth.userId,
         grade: bookObject.ratings[0].grade
       }],
-      averageRating: bookObject.averageRating
+      averageRating: bookObject.ratings[0].grade
    });
  
    book.save()
